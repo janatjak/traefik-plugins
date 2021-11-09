@@ -1,0 +1,11 @@
+displayName: Prefixed basic auth
+type: middleware
+
+import: github.com/janatjak/traefik-plugins/prefixed_basic_auth
+
+summary: 'Prefixed basic auth'
+
+testData:
+  user: x
+  password: x
+  publicPrefixes: public,api,ok

@@ -1,0 +1,9 @@
+displayName: Pdf generator
+type: middleware
+
+import: github.com/janatjak/traefik-plugins/pdf
+
+summary: 'Pdf generator'
+
+testData:
+  url: https://google.com
