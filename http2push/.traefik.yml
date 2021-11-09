@@ -1,0 +1,9 @@
+displayName: HTTP2 Push
+type: middleware
+
+import: github.com/janatjak/traefik-plugins/http2push
+
+summary: 'HTTP2 Push'
+
+testData:
+  debug: true
