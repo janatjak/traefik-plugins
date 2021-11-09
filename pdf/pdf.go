@@ -47,9 +47,7 @@ func (a *Pdf) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		header: make(map[string][]string, 0),
 	}
 
-	fmt.Println("🍀 START !!!")
 	a.next.ServeHTTP(bufferWriter, req)
-	fmt.Println("🍀 FINISH !!!")
 
 	convert(rw, a.url, query, bufferWriter)
 }
