@@ -2,12 +2,14 @@ package pdf
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type Config struct {
@@ -87,10 +89,23 @@ func convert(rw http.ResponseWriter, url string, query url.Values, bufferRw *Buf
 		contentDisposition = "attachment"
 	}
 
+	var html string
+	// gzip
+	if bufferRw.Header().Get("Content-Encoding") == "gzip" {
+		reader, _ := gzip.NewReader(bytes.NewReader(bufferRw.buf.Bytes()))
+		defer reader.Close()
+
+		gzipBuf := &strings.Builder{}
+		io.Copy(gzipBuf, reader)
+		html = gzipBuf.String()
+	} else {
+		html = bufferRw.buf.String()
+	}
+
 	body, _ := json.Marshal(H{
 		"input": H{
 			"type":    "html",
-			"content": bufferRw.buf.String(),
+			"content": html,
 		},
 		"output": H{
 			"type":        "pdf",
