@@ -1,0 +1,12 @@
+displayName: Cookie setter
+type: middleware
+
+import: github.com/janatjak/traefik-plugins/cookie
+
+summary: 'Cookie setter'
+
+testData:
+  name: ""
+  maxAge: 0
+  secure: false
+  httpOnly: false
