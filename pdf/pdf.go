@@ -96,7 +96,12 @@ func convert(rw http.ResponseWriter, url string, query url.Values, bufferRw *Buf
 		defer reader.Close()
 
 		gzipBuf := &strings.Builder{}
-		io.Copy(gzipBuf, reader)
+		_, err := io.Copy(gzipBuf, reader)
+		if err != nil {
+			rw.WriteHeader(500)
+			rw.Write([]byte("Original request error (gzip)"))
+			return
+		}
 		html = gzipBuf.String()
 	} else {
 		html = bufferRw.buf.String()
@@ -117,7 +122,12 @@ func convert(rw http.ResponseWriter, url string, query url.Values, bufferRw *Buf
 		},
 	})
 
-	res, _ := http.Post(url, "application/json", bytes.NewBuffer(body))
+	res, err := http.Post(url, "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		rw.WriteHeader(400)
+		rw.Write([]byte("Converter request error"))
+		return
+	}
 
 	rw.Header().Add("Content-Type", "application/pdf")
 	rw.Header().Add("Content-Disposition", contentDisposition+"; filename=\""+filename+"\"")
