@@ -58,6 +58,7 @@ func (a *CookieConfig) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	req.AddCookie(cookie)
+	req.Header.Add("Traefik-Cookie-"+config.Name, value)
 	http.SetCookie(rw, cookie)
 
 	a.next.ServeHTTP(rw, req)
