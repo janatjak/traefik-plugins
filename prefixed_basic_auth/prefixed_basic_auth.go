@@ -11,6 +11,7 @@ type Config struct {
 	User           string
 	Password       string
 	PublicPrefixes string
+	PublicSuffixes string
 }
 
 func CreateConfig() *Config {
@@ -23,6 +24,7 @@ type PrefixedBasicAuth struct {
 	user           string
 	password       string
 	publicPrefixes []string
+	publicSuffixes []string
 }
 
 // New created a new PrefixedBasicAuth plugin.
@@ -40,12 +42,18 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		return nil, fmt.Errorf("publicPrefixes is empty")
 	}
 
+	publicSuffixes := strings.Split(config.PublicSuffixes, ",")
+	if config.PublicSuffixes == "" {
+		publicSuffixes = []string{}
+	}
+
 	return &PrefixedBasicAuth{
 		next:           next,
 		name:           name,
 		user:           config.User,
 		password:       config.Password,
 		publicPrefixes: publicPrefixes,
+		publicSuffixes: publicSuffixes,
 	}, nil
 }
 
@@ -53,6 +61,13 @@ func (a *PrefixedBasicAuth) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 	match := false
 	for _, prefix := range a.publicPrefixes {
 		if strings.HasPrefix(req.RequestURI, "/"+prefix) {
+			match = true
+			break
+		}
+	}
+
+	for _, suffix := range a.publicSuffixes {
+		if strings.HasSuffix(req.URL.Path, suffix) {
 			match = true
 			break
 		}

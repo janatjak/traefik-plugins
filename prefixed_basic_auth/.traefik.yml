@@ -9,3 +9,4 @@ testData:
   user: x
   password: x
   publicPrefixes: public,api,ok
+  publicSuffixes: .jpg,.png

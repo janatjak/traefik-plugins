@@ -1,3 +1,3 @@
 module github.com/janatjak/traefik-plugins/prefixed_basic_auth
 
-go 1.17
+go 1.22
